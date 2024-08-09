@@ -9,26 +9,21 @@ import { Button } from '@/components/ui/button'
 import { Form, FormField } from '@/components/ui/form'
 
 export const SignupForm: React.FC = () => {
-  const form = useForm<FormValues>({ resolver })
+  const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema) })
 
   const handleSubmit = form.handleSubmit(async (data) => {
     /* Call your API here */
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     toast.success('Account created!', {
-      description: JSON.stringify(data, null, 2),
+      description: <pre>{JSON.stringify(data, null, 2)}</pre>,
     })
   })
 
   return (
     <Form className="w-full max-w-screen-md" onSubmit={handleSubmit}>
       {fields.map((field) => (
-        <FormField
-          {...field}
-          key={field.name}
-          register={form.register}
-          error={form.formState.errors[field.name]}
-        />
+        <FormField key={field.name} control={form.control} {...field} />
       ))}
 
       <Button isLoading={form.formState.isSubmitting}>Register</Button>
@@ -53,12 +48,8 @@ const schema = z
     message: 'Passwords do not match',
   })
 
-type FormValues = z.infer<typeof schema>
-
-const resolver = zodResolver(schema)
-
 const fields = [
-  { name: 'name' as const, label: 'Name', type: 'text' },
+  { name: 'name' as const, label: 'Name', type: 'text', description: 'Your display name' },
   { name: 'email' as const, label: 'Email', type: 'email' },
   { name: 'password' as const, label: 'Password', type: 'password' },
   { name: 'confirmPassword' as const, label: 'Confirm Password', type: 'password' },

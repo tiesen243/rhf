@@ -12,7 +12,7 @@ export const metadata = {
 }
 
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => (
-  <html lang="en">
+  <html lang="en" suppressHydrationWarning>
     <body className={`${GeistSans.variable} font-sans`}>
       <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
         {children}
